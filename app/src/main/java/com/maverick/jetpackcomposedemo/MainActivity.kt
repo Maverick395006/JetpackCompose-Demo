@@ -116,11 +116,14 @@ class MainActivity : ComponentActivity() {
                 val color = remember {
                     mutableStateOf(Color.Yellow)
                 }
-                ColorBox(Modifier.weight(1f).fillMaxSize()){
+                ColorBox(
+                    Modifier
+                        .weight(1f)
+                        .fillMaxSize()) {
                     color.value = it
                 }
                 Box(
-                    modifier = Modifier
+                    Modifier
                         .background(color.value)
                         .weight(1f)
                         .fillMaxSize()
