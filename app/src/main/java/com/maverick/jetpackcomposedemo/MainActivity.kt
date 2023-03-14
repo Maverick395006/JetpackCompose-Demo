@@ -5,11 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -29,6 +32,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,46 +72,88 @@ class MainActivity : ComponentActivity() {
                 Font(R.font.lexend_extrabold, FontWeight.ExtraBold),
             )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF101010))
-            ) {
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                color = Color.Green,
-                                fontSize = 50.sp
-                            )
-                        ) {
-                            append("J")
-                        }
-                        append("etpack")
-                        withStyle(
-                            style = SpanStyle(
-                                color = Color.Green,
-                                fontSize = 50.sp
-                            )
-                        ) {
-                            append("C")
-                        }
-                        append("ompose")
-                    },
-                    color = Color.White,
-                    fontSize = 30.sp,
-                    fontFamily = fontFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontStyle = FontStyle.Italic,
-                    textAlign = TextAlign.Center,
-                    textDecoration = TextDecoration.Underline
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .background(Color(0xFF101010))
+//            ) {
+//                Text(
+//                    text = buildAnnotatedString {
+//                        withStyle(
+//                            style = SpanStyle(
+//                                color = Color.Green,
+//                                fontSize = 50.sp
+//                            )
+//                        ) {
+//                            append("J")
+//                        }
+//                        append("etpack")
+//                        withStyle(
+//                            style = SpanStyle(
+//                                color = Color.Green,
+//                                fontSize = 50.sp
+//                            )
+//                        ) {
+//                            append("C")
+//                        }
+//                        append("ompose")
+//                    },
+//                    color = Color.White,
+//                    fontSize = 30.sp,
+//                    fontFamily = fontFamily,
+//                    fontWeight = FontWeight.Bold,
+//                    fontStyle = FontStyle.Italic,
+//                    textAlign = TextAlign.Center,
+//                    textDecoration = TextDecoration.Underline
+//                )
+//            }
+
+            /**
+             * 4
+             */
+
+            Column(Modifier.fillMaxSize()) {
+                val color = remember {
+                    mutableStateOf(Color.Yellow)
+                }
+                ColorBox(Modifier.weight(1f).fillMaxSize()){
+                    color.value = it
+                }
+                Box(
+                    modifier = Modifier
+                        .background(color.value)
+                        .weight(1f)
+                        .fillMaxSize()
                 )
             }
 
 
-
         }
     }
+}
+
+
+/**
+ * 4
+ */
+@Composable
+fun ColorBox(
+    modifier: Modifier = Modifier,
+    updateColor: (Color) -> Unit
+) {
+    Box(modifier = modifier
+        .background(Color.Red)
+        .clickable {
+            updateColor(
+                Color(
+                    Random.nextFloat(),
+                    Random.nextFloat(),
+                    Random.nextFloat(),
+                    1f
+                )
+            )
+        }
+    )
 }
 
 
