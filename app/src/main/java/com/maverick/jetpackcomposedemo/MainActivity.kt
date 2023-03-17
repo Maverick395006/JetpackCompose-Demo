@@ -1,5 +1,6 @@
 package com.maverick.jetpackcomposedemo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,11 +9,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -32,9 +30,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -47,9 +47,9 @@ class MainActivity : ComponentActivity() {
             /**
              * 2 Image Card
              */
-            val painter = painterResource(id = R.drawable.image)
-            val contentDescription = "Kermit Enjoying Snow."
-            val title = "Kermit Enjoying Snow."
+//            val painter = painterResource(id = R.drawable.image)
+//            val contentDescription = "Kermit Enjoying Snow."
+//            val title = "Kermit Enjoying Snow."
 //            Box(
 //                modifier = Modifier
 //                    .fillMaxWidth(0.5f)
@@ -61,16 +61,16 @@ class MainActivity : ComponentActivity() {
             /**
              * 3 Styling Text
              */
-            val fontFamily = FontFamily(
-                Font(R.font.lexend_thin, FontWeight.Thin),
-                Font(R.font.lexend_extralight, FontWeight.ExtraLight),
-                Font(R.font.lexend_light, FontWeight.Light),
-                Font(R.font.lexend_regular, FontWeight.Normal),
-                Font(R.font.lexend_medium, FontWeight.Medium),
-                Font(R.font.lexend_semibold, FontWeight.SemiBold),
-                Font(R.font.lexend_bold, FontWeight.Bold),
-                Font(R.font.lexend_extrabold, FontWeight.ExtraBold),
-            )
+//            val fontFamily = FontFamily(
+//                Font(R.font.lexend_thin, FontWeight.Thin),
+//                Font(R.font.lexend_extralight, FontWeight.ExtraLight),
+//                Font(R.font.lexend_light, FontWeight.Light),
+//                Font(R.font.lexend_regular, FontWeight.Normal),
+//                Font(R.font.lexend_medium, FontWeight.Medium),
+//                Font(R.font.lexend_semibold, FontWeight.SemiBold),
+//                Font(R.font.lexend_bold, FontWeight.Bold),
+//                Font(R.font.lexend_extrabold, FontWeight.ExtraBold),
+//            )
 
 //            Box(
 //                modifier = Modifier
@@ -112,25 +112,68 @@ class MainActivity : ComponentActivity() {
              * 4
              */
 
-            Column(Modifier.fillMaxSize()) {
-                val color = remember {
-                    mutableStateOf(Color.Yellow)
-                }
-                ColorBox(
-                    Modifier
-                        .weight(1f)
-                        .fillMaxSize()) {
-                    color.value = it
-                }
-                Box(
-                    Modifier
-                        .background(color.value)
-                        .weight(1f)
+//            Column(Modifier.fillMaxSize()) {
+//                val color = remember {
+//                    mutableStateOf(Color.Yellow)
+//                }
+//                ColorBox(
+//                    Modifier
+//                        .weight(1f)
+//                        .fillMaxSize()) {
+//                    color.value = it
+//                }
+//                Box(
+//                    Modifier
+//                        .background(color.value)
+//                        .weight(1f)
+//                        .fillMaxSize()
+//                )
+//            }
+
+            /**
+             * 5
+             */
+            val scaffoldState = rememberScaffoldState()
+            var textFieldState by remember {
+                mutableStateOf("")
+            }
+            val scope = rememberCoroutineScope()
+
+            Scaffold(
+                modifier = Modifier.fillMaxSize().padding(bottom = 6.dp),
+                scaffoldState = scaffoldState,
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
                         .fillMaxSize()
-                )
+                        .padding(horizontal = 30.dp)
+                ) {
+                    TextField(
+                        value = textFieldState,
+                        label = {
+                            Text("Enter your name")
+                        },
+                        onValueChange = {
+                            textFieldState = it
+                        },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = {
+                        scope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar("Hello $textFieldState")
+                        }
+                    }) {
+                        Text(text = "Please greet me")
+                    }
+                }
             }
 
 
+            
         }
     }
 }
