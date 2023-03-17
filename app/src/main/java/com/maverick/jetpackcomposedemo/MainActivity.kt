@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -31,6 +32,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -176,20 +181,56 @@ class MainActivity : ComponentActivity() {
             /**
              * 6
              */
-            LazyColumn {
-                itemsIndexed(
-                    listOf("This","is","Jetpack","Compose","as","everyone","is","moving","towards","modern","Android","Development")
-                ){index,string->
-                    Text(
-                        text = string,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 24.dp),
-                    )
+//            LazyColumn {
+//                itemsIndexed(
+//                    listOf("This","is","Jetpack","Compose","as","everyone","is","moving","towards","modern","Android","Development")
+//                ){index,string->
+//                    Text(
+//                        text = string,
+//                        fontSize = 24.sp,
+//                        fontWeight = FontWeight.Bold,
+//                        textAlign = TextAlign.Center,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(vertical = 24.dp),
+//                    )
+//                }
+//            }
+
+            /**
+             * 7
+             */
+            val constraintSet = ConstraintSet {
+                val greenBox = createRefFor("greenbox")
+                val redBox = createRefFor("redbox")
+                val guideline = createGuidelineFromTop(0.5f)
+
+                constrain(greenBox) {
+                    top.linkTo(guideline)
+                    start.linkTo(parent.start)
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(100.dp)
                 }
+                constrain(redBox) {
+                    top.linkTo(parent.top)
+                    start.linkTo(greenBox.end)
+                    end.linkTo(parent.end)
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(100.dp)
+                }
+                createHorizontalChain(greenBox, redBox, chainStyle = ChainStyle.Packed)
+            }
+            ConstraintLayout(constraintSet, Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .background(Color.Green)
+                        .layoutId("greenbox")
+                )
+                Box(
+                    modifier = Modifier
+                        .background(Color.Red)
+                        .layoutId("redbox")
+                )
             }
 
 
@@ -203,22 +244,17 @@ class MainActivity : ComponentActivity() {
  */
 @Composable
 fun ColorBox(
-    modifier: Modifier = Modifier,
-    updateColor: (Color) -> Unit
+    modifier: Modifier = Modifier, updateColor: (Color) -> Unit
 ) {
     Box(modifier = modifier
         .background(Color.Red)
         .clickable {
             updateColor(
                 Color(
-                    Random.nextFloat(),
-                    Random.nextFloat(),
-                    Random.nextFloat(),
-                    1f
+                    Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f
                 )
             )
-        }
-    )
+        })
 }
 
 
@@ -227,10 +263,7 @@ fun ColorBox(
  */
 @Composable
 fun ImageCard(
-    painter: Painter,
-    contentDescription: String,
-    title: String,
-    modifier: Modifier = Modifier
+    painter: Painter, contentDescription: String, title: String, modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -249,10 +282,8 @@ fun ImageCard(
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(
-                                Color.Transparent,
-                                Color.Black
-                            ),
-                            startY = 300f
+                                Color.Transparent, Color.Black
+                            ), startY = 300f
                         )
                     )
             )
@@ -263,10 +294,8 @@ fun ImageCard(
                 contentAlignment = Alignment.BottomStart
             ) {
                 Text(
-                    text = title,
-                    style = TextStyle(
-                        color = Color.White,
-                        fontSize = 16.sp
+                    text = title, style = TextStyle(
+                        color = Color.White, fontSize = 16.sp
                     )
                 )
             }
@@ -281,8 +310,7 @@ fun ImageCard(
  */
 @Composable
 fun Greetings(
-    name: String,
-    extension: String
+    name: String, extension: String
 ) {
     Row(
         modifier = Modifier
