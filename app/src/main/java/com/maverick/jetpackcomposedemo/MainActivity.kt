@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -29,8 +30,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
+import com.maverick.jetpackcomposedemo.ui.theme.JetpackComposeDemoTheme
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -39,15 +46,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            JetpackComposeDemoTheme {
 
-            /**
-             * 1 Simple Greetings
-             */
+
+                /**
+                 * 1 Simple Greetings
+                 */
 //            Greetings("Maverick", "Universe")
 
-            /**
-             * 2 Image Card
-             */
+                /**
+                 * 2 Image Card
+                 */
 //            val painter = painterResource(id = R.drawable.image)
 //            val contentDescription = "Kermit Enjoying Snow."
 //            val title = "Kermit Enjoying Snow."
@@ -59,9 +68,9 @@ class MainActivity : ComponentActivity() {
 //                ImageCard(painter = painter, contentDescription = contentDescription, title = title)
 //            }
 
-            /**
-             * 3 Styling Text
-             */
+                /**
+                 * 3 Styling Text
+                 */
 //            val fontFamily = FontFamily(
 //                Font(R.font.lexend_thin, FontWeight.Thin),
 //                Font(R.font.lexend_extralight, FontWeight.ExtraLight),
@@ -109,9 +118,9 @@ class MainActivity : ComponentActivity() {
 //                )
 //            }
 
-            /**
-             * 4
-             */
+                /**
+                 * 4
+                 */
 
 //            Column(Modifier.fillMaxSize()) {
 //                val color = remember {
@@ -131,9 +140,9 @@ class MainActivity : ComponentActivity() {
 //                )
 //            }
 
-            /**
-             * 5
-             */
+                /**
+                 * 5
+                 */
 //            val scaffoldState = rememberScaffoldState()
 //            var textFieldState by remember {
 //                mutableStateOf("")
@@ -173,52 +182,95 @@ class MainActivity : ComponentActivity() {
 //                }
 //            }
 
-            /**
-             * 6
-             */
-            LazyColumn {
-                itemsIndexed(
-                    listOf("This","is","Jetpack","Compose","as","everyone","is","moving","towards","modern","Android","Development")
-                ){index,string->
-                    Text(
-                        text = string,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 24.dp),
-                    )
+                /**
+                 * 6
+                 */
+//            LazyColumn {
+//                itemsIndexed(
+//                    listOf("This","is","Jetpack","Compose","as","everyone","is","moving","towards","modern","Android","Development")
+//                ){index,string->
+//                    Text(
+//                        text = string,
+//                        fontSize = 24.sp,
+//                        fontWeight = FontWeight.Bold,
+//                        textAlign = TextAlign.Center,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(vertical = 24.dp),
+//                    )
+//                }
+//            }
+
+                /**
+                 * 7
+                 */
+            val constraintSet = ConstraintSet {
+                val greenBox = createRefFor("greenbox")
+                val redBox = createRefFor("redbox")
+                val guideline = createGuidelineFromTop(0.5f)
+
+                constrain(greenBox) {
+                    top.linkTo(guideline)
+                    start.linkTo(parent.start)
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(100.dp)
                 }
+                constrain(redBox) {
+                    top.linkTo(parent.top)
+                    start.linkTo(greenBox.end)
+                    end.linkTo(parent.end)
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(100.dp)
+                }
+                createHorizontalChain(greenBox, redBox, chainStyle = ChainStyle.Packed)
+            }
+            ConstraintLayout(constraintSet, Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .background(Color.Green)
+                        .layoutId("greenbox")
+                )
+                Box(
+                    modifier = Modifier
+                        .background(Color.Red)
+                        .layoutId("redbox")
+                )
             }
 
-
+            }
         }
     }
 }
 
 
 /**
+ * Compose Preview
+ */
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    JetpackComposeDemoTheme {
+        //TODO
+    }
+}
+
+/**
  * 4
  */
 @Composable
 fun ColorBox(
-    modifier: Modifier = Modifier,
-    updateColor: (Color) -> Unit
+    modifier: Modifier = Modifier, updateColor: (Color) -> Unit
 ) {
     Box(modifier = modifier
         .background(Color.Red)
         .clickable {
             updateColor(
                 Color(
-                    Random.nextFloat(),
-                    Random.nextFloat(),
-                    Random.nextFloat(),
-                    1f
+                    Random.nextFloat(), Random.nextFloat(), Random.nextFloat(), 1f
                 )
             )
-        }
-    )
+        })
 }
 
 
@@ -249,10 +301,8 @@ fun ImageCard(
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(
-                                Color.Transparent,
-                                Color.Black
-                            ),
-                            startY = 300f
+                                Color.Transparent, Color.Black
+                            ), startY = 300f
                         )
                     )
             )
@@ -263,10 +313,8 @@ fun ImageCard(
                 contentAlignment = Alignment.BottomStart
             ) {
                 Text(
-                    text = title,
-                    style = TextStyle(
-                        color = Color.White,
-                        fontSize = 16.sp
+                    text = title, style = TextStyle(
+                        color = Color.White, fontSize = 16.sp
                     )
                 )
             }
@@ -281,8 +329,7 @@ fun ImageCard(
  */
 @Composable
 fun Greetings(
-    name: String,
-    extension: String
+    name: String, extension: String
 ) {
     Row(
         modifier = Modifier
