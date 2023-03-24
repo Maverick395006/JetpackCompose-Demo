@@ -38,6 +38,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import com.maverick.jetpackcomposedemo.ui.theme.JetpackComposeDemoTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -46,6 +47,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+
+            /**
+             * 10 Effect Handlers
+             */
+
+            var text by remember {
+                mutableStateOf("")
+            }
+
             JetpackComposeDemoTheme {
 
 
@@ -55,7 +66,7 @@ class MainActivity : ComponentActivity() {
 //            Greetings("Maverick", "Universe")
 
                 /**
-                 * 2 Image Card
+                 * 4 Image Card
                  */
 //            val painter = painterResource(id = R.drawable.image)
 //            val contentDescription = "Kermit Enjoying Snow."
@@ -69,7 +80,7 @@ class MainActivity : ComponentActivity() {
 //            }
 
                 /**
-                 * 3 Styling Text
+                 * 5 Styling Text
                  */
 //            val fontFamily = FontFamily(
 //                Font(R.font.lexend_thin, FontWeight.Thin),
@@ -119,7 +130,7 @@ class MainActivity : ComponentActivity() {
 //            }
 
                 /**
-                 * 4
+                 * 6 State
                  */
 
 //            Column(Modifier.fillMaxSize()) {
@@ -141,7 +152,7 @@ class MainActivity : ComponentActivity() {
 //            }
 
                 /**
-                 * 5
+                 * 7 SnackBar
                  */
 //            val scaffoldState = rememberScaffoldState()
 //            var textFieldState by remember {
@@ -183,7 +194,7 @@ class MainActivity : ComponentActivity() {
 //            }
 
                 /**
-                 * 6
+                 * 8 Lists
                  */
 //            LazyColumn {
 //                itemsIndexed(
@@ -202,40 +213,50 @@ class MainActivity : ComponentActivity() {
 //            }
 
                 /**
-                 * 7
+                 * 9 Constraint Layout
                  */
-            val constraintSet = ConstraintSet {
-                val greenBox = createRefFor("greenbox")
-                val redBox = createRefFor("redbox")
-                val guideline = createGuidelineFromTop(0.5f)
+//            val constraintSet = ConstraintSet {
+//                val greenBox = createRefFor("greenbox")
+//                val redBox = createRefFor("redbox")
+//                val guideline = createGuidelineFromTop(0.5f)
+//
+//                constrain(greenBox) {
+//                    top.linkTo(guideline)
+//                    start.linkTo(parent.start)
+//                    width = Dimension.value(100.dp)
+//                    height = Dimension.value(100.dp)
+//                }
+//                constrain(redBox) {
+//                    top.linkTo(parent.top)
+//                    start.linkTo(greenBox.end)
+//                    end.linkTo(parent.end)
+//                    width = Dimension.value(100.dp)
+//                    height = Dimension.value(100.dp)
+//                }
+//                createHorizontalChain(greenBox, redBox, chainStyle = ChainStyle.Packed)
+//            }
+//            ConstraintLayout(constraintSet, Modifier.fillMaxSize()) {
+//                Box(
+//                    modifier = Modifier
+//                        .background(Color.Green)
+//                        .layoutId("greenbox")
+//                )
+//                Box(
+//                    modifier = Modifier
+//                        .background(Color.Red)
+//                        .layoutId("redbox")
+//                )
+//            }
 
-                constrain(greenBox) {
-                    top.linkTo(guideline)
-                    start.linkTo(parent.start)
-                    width = Dimension.value(100.dp)
-                    height = Dimension.value(100.dp)
+                /**
+                 * 10 Effect Handlers
+                 */
+
+                LaunchedEffect(key1 = text) {
+                    delay(3000L)
+                    println("The text is $text")
                 }
-                constrain(redBox) {
-                    top.linkTo(parent.top)
-                    start.linkTo(greenBox.end)
-                    end.linkTo(parent.end)
-                    width = Dimension.value(100.dp)
-                    height = Dimension.value(100.dp)
-                }
-                createHorizontalChain(greenBox, redBox, chainStyle = ChainStyle.Packed)
-            }
-            ConstraintLayout(constraintSet, Modifier.fillMaxSize()) {
-                Box(
-                    modifier = Modifier
-                        .background(Color.Green)
-                        .layoutId("greenbox")
-                )
-                Box(
-                    modifier = Modifier
-                        .background(Color.Red)
-                        .layoutId("redbox")
-                )
-            }
+
 
             }
         }
@@ -255,8 +276,9 @@ fun DefaultPreview() {
     }
 }
 
+
 /**
- * 4
+ * 6 State
  */
 @Composable
 fun ColorBox(
@@ -275,7 +297,7 @@ fun ColorBox(
 
 
 /**
- * 2 Image Card
+ * 4 Image Card
  */
 @Composable
 fun ImageCard(
