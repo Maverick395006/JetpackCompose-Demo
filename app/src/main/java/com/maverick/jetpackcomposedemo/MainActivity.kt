@@ -37,6 +37,10 @@ import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import com.maverick.jetpackcomposedemo.side_effect.DisposableExample
+import com.maverick.jetpackcomposedemo.side_effect.FakeViewModel
+import com.maverick.jetpackcomposedemo.side_effect.LaunchedEffectExample
+import com.maverick.jetpackcomposedemo.side_effect.RememberUpdatedState
 import com.maverick.jetpackcomposedemo.ui.theme.JetpackComposeDemoTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,9 +57,9 @@ class MainActivity : ComponentActivity() {
              * 10 Effect Handlers
              */
 
-            var text by remember {
-                mutableStateOf("")
-            }
+//            var text by remember {
+//                mutableStateOf("")
+//            }
 
             JetpackComposeDemoTheme {
 
@@ -252,11 +256,30 @@ class MainActivity : ComponentActivity() {
                  * 10 Effect Handlers
                  */
 
-                LaunchedEffect(key1 = text) {
-                    delay(3000L)
-                    println("The text is $text")
-                }
+//                LaunchedEffect(key1 = text) {
+//                    delay(3000L)
+//                    println("The text is $text")
+//                }
 
+                /**
+                 * SideEffects in Jetpack Compose    [url:https://www.youtube.com/watch?v=KRqDT4oQWUU]
+                 */
+
+                Surface(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+
+                    // LaunchEffect() & rememberCoroutineScope()
+//                    LaunchedEffectExample(fakeViewModel = FakeViewModel())
+
+                    // rememberUpdatedState()
+//                    RememberUpdatedState()
+
+                    // DisposableEffect()
+//                    DisposableExample(activity = this, backPressedDispatcher = this.onBackPressedDispatcher)
+
+
+                }
 
             }
         }
